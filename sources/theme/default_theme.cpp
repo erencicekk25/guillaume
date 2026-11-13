@@ -1210,7 +1210,7 @@ namespace guillaume
 		initializeDarkHighContrastScheme(
 			theme.getScheme(ThemeSchemeRole::DarkHighContrast));
 
-		for (std::size_t role = 0; role < ThemeSchemeRole::ThemeSchemeCount;
+		for (std::size_t role = 0; role < static_cast<std::size_t>(ThemeSchemeRole::Count);
 			 ++role) {
 			initializeDerivedRoles(
 				theme.getScheme(static_cast<ThemeSchemeRole>(role)));

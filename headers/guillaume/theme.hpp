@@ -98,26 +98,26 @@ namespace guillaume
 	/**
 	 * @brief Theme scheme variants (light/dark and contrast levels).
 	 */
-	enum ThemeSchemeRole : size_t {
+	enum class ThemeSchemeRole : std::size_t {
 		Light,
 		LightMediumContrast,
 		LightHighContrast,
 		Dark,
 		DarkMediumContrast,
 		DarkHighContrast,
-		ThemeSchemeCount
+		Count
 	};
 
 	/**
 	 * @brief Theme palette categories used by Material Design.
 	 */
-	enum ThemePaletteRole : size_t {
+	enum class ThemePaletteRole : std::size_t {
 		Primary,
 		Secondary,
 		Tertiary,
 		Neutral,
 		NeutralVariant,
-		ThemePaletteCount
+		Count
 	};
 
 	/**
@@ -243,6 +243,7 @@ namespace guillaume
 		 * @brief Get a scheme color by role.
 		 * @param role Target role.
 		 * @return Immutable extended color reference.
+		 * @throws std::out_of_range If @p role is not a valid role.
 		 */
 		const ExtendedColor &getColor(SchemeColorRole role) const;
 
@@ -250,6 +251,7 @@ namespace guillaume
 		 * @brief Get a mutable scheme color by role.
 		 * @param role Target role.
 		 * @return Mutable extended color reference.
+		 * @throws std::out_of_range If @p role is not a valid role.
 		 */
 		ExtendedColor &getColor(SchemeColorRole role);
 
@@ -278,7 +280,9 @@ namespace guillaume
 		 * @brief Get all colors in role index order.
 		 * @return Immutable color array reference.
 		 */
-		const auto &getColors(void) const;
+		const std::array<ExtendedColor,
+						 static_cast<std::size_t>(SchemeColorRole::Count)> &
+		getColors(void) const;
 	};
 
 	/**
@@ -414,9 +418,10 @@ namespace guillaume
 		std::string _name;	  ///< Theme name for identification
 		std::string
 			_description;	 ///< Optional theme description for documentation
-		std::array<Scheme, ThemeSchemeRole::ThemeSchemeCount>
+		std::array<Scheme, static_cast<std::size_t>(ThemeSchemeRole::Count)>
 			_schemes;	 ///< Schemes indexed by ThemeSchemeRole
-		std::array<Palette, ThemePaletteRole::ThemePaletteCount>
+		std::array<Palette,
+				   static_cast<std::size_t>(ThemePaletteRole::Count)>
 			_palettes;	  ///< Palettes indexed by ThemePaletteRole
 		theme::Typescale _typescale;			///< Material 3 typescale
 		theme::ShapeScale _shapes;				///< Material 3 shape scale
@@ -470,6 +475,7 @@ namespace guillaume
 		 * @brief Get an immutable scheme by role.
 		 * @param role Scheme role selector.
 		 * @return Immutable scheme reference.
+		 * @throws std::out_of_range If @p role is not a valid role.
 		 */
 		const Scheme &getScheme(ThemeSchemeRole role) const;
 
@@ -477,6 +483,7 @@ namespace guillaume
 		 * @brief Get a mutable scheme by role.
 		 * @param role Scheme role selector.
 		 * @return Mutable scheme reference.
+		 * @throws std::out_of_range If @p role is not a valid role.
 		 */
 		Scheme &getScheme(ThemeSchemeRole role);
 
@@ -484,6 +491,7 @@ namespace guillaume
 		 * @brief Get an immutable palette by role.
 		 * @param role Palette role selector.
 		 * @return Immutable palette reference.
+		 * @throws std::out_of_range If @p role is not a valid role.
 		 */
 		const Palette &getPalette(ThemePaletteRole role) const;
 
@@ -491,6 +499,7 @@ namespace guillaume
 		 * @brief Get a mutable palette by role.
 		 * @param role Palette role selector.
 		 * @return Mutable palette reference.
+		 * @throws std::out_of_range If @p role is not a valid role.
 		 */
 		Palette &getPalette(ThemePaletteRole role);
 
@@ -498,6 +507,7 @@ namespace guillaume
 		 * @brief Set a scheme for a given role.
 		 * @param role Scheme role selector.
 		 * @param scheme Scheme to set for the role.
+		 * @throws std::out_of_range If @p role is not a valid role.
 		 */
 		void setScheme(ThemeSchemeRole role, const Scheme &scheme);
 
@@ -505,6 +515,7 @@ namespace guillaume
 		 * @brief Set a palette for a given role.
 		 * @param role Palette role selector.
 		 * @param palette Palette to set for the role.
+		 * @throws std::out_of_range If @p role is not a valid role.
 		 */
 		void setPalette(ThemePaletteRole role, const Palette &palette);
 

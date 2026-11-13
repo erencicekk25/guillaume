@@ -52,7 +52,7 @@ namespace guillaume::tests
 
 	TEST_F(TestTheme, EverySchemePopulatesEveryRole)
 	{
-		for (std::size_t scheme = 0; scheme < ThemeSchemeRole::ThemeSchemeCount;
+		for (std::size_t scheme = 0; scheme < static_cast<std::size_t>(ThemeSchemeRole::Count);
 			 ++scheme) {
 			const Scheme &current =
 				defaultTheme.getScheme(static_cast<ThemeSchemeRole>(scheme));
@@ -83,7 +83,7 @@ namespace guillaume::tests
 				EXPECT_FALSE(sameColor(
 					defaultTheme.getScheme(scheme).getColor(role).getColor(),
 					black))
-					<< "scheme " << scheme << " role "
+					<< "scheme " << static_cast<std::size_t>(scheme) << " role "
 					<< static_cast<std::size_t>(role);
 			}
 		}
@@ -129,7 +129,7 @@ namespace guillaume::tests
 
 	TEST_F(TestTheme, DisabledRolesDeriveFromOnSurface)
 	{
-		for (std::size_t scheme = 0; scheme < ThemeSchemeRole::ThemeSchemeCount;
+		for (std::size_t scheme = 0; scheme < static_cast<std::size_t>(ThemeSchemeRole::Count);
 			 ++scheme) {
 			const Scheme &current =
 				defaultTheme.getScheme(static_cast<ThemeSchemeRole>(scheme));
@@ -345,6 +345,40 @@ namespace guillaume::tests
 
 		EXPECT_FLOAT_EQ(getShapeRadius(theme::ShapeRole::Medium),
 						defaultRadius);
+	}
+
+	TEST_F(TestTheme, GetColorsIsUsableFromAnotherTranslationUnit)
+	{
+		const Scheme &light = defaultTheme.getScheme(ThemeSchemeRole::Light);
+		const auto &colors	= light.getColors();
+
+		ASSERT_EQ(colors.size(), roleCount);
+		EXPECT_EQ(&colors[static_cast<std::size_t>(SchemeColorRole::Primary)],
+				  &light.getColor(SchemeColorRole::Primary));
+	}
+
+	TEST_F(TestTheme, OutOfRangeRolesThrow)
+	{
+		Theme theme					 = defaultTheme;
+		const Theme &constTheme		 = theme;
+		const ThemeSchemeRole badScheme = ThemeSchemeRole::Count;
+		const ThemePaletteRole badPalette = ThemePaletteRole::Count;
+		const SchemeColorRole badColor	  = SchemeColorRole::Count;
+
+		EXPECT_THROW(theme.getScheme(badScheme), std::out_of_range);
+		EXPECT_THROW(constTheme.getScheme(badScheme), std::out_of_range);
+		EXPECT_THROW(theme.setScheme(badScheme, Scheme()), std::out_of_range);
+		EXPECT_THROW(theme.getPalette(badPalette), std::out_of_range);
+		EXPECT_THROW(constTheme.getPalette(badPalette), std::out_of_range);
+		EXPECT_THROW(theme.setPalette(badPalette, Palette()),
+					 std::out_of_range);
+
+		Scheme &scheme				= theme.getScheme(ThemeSchemeRole::Light);
+		const Scheme &constScheme	= scheme;
+		EXPECT_THROW(scheme.getColor(badColor), std::out_of_range);
+		EXPECT_THROW(constScheme.getColor(badColor), std::out_of_range);
+		EXPECT_THROW(scheme.setColor(badColor, ExtendedColor()),
+					 std::out_of_range);
 	}
 
 }	 // namespace guillaume::tests

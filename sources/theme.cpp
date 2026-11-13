@@ -99,17 +99,17 @@ namespace guillaume
 
 	const ExtendedColor &Scheme::getColor(SchemeColorRole role) const
 	{
-		return _colors[toIndex(role)];
+		return _colors.at(toIndex(role));
 	}
 
 	ExtendedColor &Scheme::getColor(SchemeColorRole role)
 	{
-		return _colors[toIndex(role)];
+		return _colors.at(toIndex(role));
 	}
 
 	void Scheme::setColor(SchemeColorRole role, const ExtendedColor &color)
 	{
-		_colors[toIndex(role)] = color;
+		_colors.at(toIndex(role)) = color;
 	}
 
 	void Scheme::setColor(SchemeColorRole role,
@@ -117,11 +117,13 @@ namespace guillaume
 						  const std::string &name,
 						  const std::string &description, bool harmonized)
 	{
-		_colors[toIndex(role)] =
+		_colors.at(toIndex(role)) =
 			ExtendedColor(color, name, description, harmonized);
 	}
 
-	const auto &Scheme::getColors(void) const
+	const std::array<ExtendedColor,
+					 static_cast<std::size_t>(SchemeColorRole::Count)> &
+	Scheme::getColors(void) const
 	{
 		return _colors;
 	}
@@ -235,32 +237,32 @@ namespace guillaume
 
 	const Scheme &Theme::getScheme(ThemeSchemeRole role) const
 	{
-		return _schemes[role];
+		return _schemes.at(static_cast<std::size_t>(role));
 	}
 
 	Scheme &Theme::getScheme(ThemeSchemeRole role)
 	{
-		return _schemes[role];
+		return _schemes.at(static_cast<std::size_t>(role));
 	}
 
 	const Palette &Theme::getPalette(ThemePaletteRole role) const
 	{
-		return _palettes[role];
+		return _palettes.at(static_cast<std::size_t>(role));
 	}
 
 	Palette &Theme::getPalette(ThemePaletteRole role)
 	{
-		return _palettes[role];
+		return _palettes.at(static_cast<std::size_t>(role));
 	}
 
 	void Theme::setScheme(ThemeSchemeRole role, const Scheme &scheme)
 	{
-		_schemes[role] = scheme;
+		_schemes.at(static_cast<std::size_t>(role)) = scheme;
 	}
 
 	void Theme::setPalette(ThemePaletteRole role, const Palette &palette)
 	{
-		_palettes[role] = palette;
+		_palettes.at(static_cast<std::size_t>(role)) = palette;
 	}
 
 	const theme::Typescale &Theme::getTypescale(void) const
